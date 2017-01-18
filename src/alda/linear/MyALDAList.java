@@ -6,7 +6,11 @@ import java.util.NoSuchElementException;
 
 import alda.linear.MyALDAList;
 
-// Should be MyAldaList according to Google Java Style guide. https://google.github.io/styleguide/javaguide.html#s5.3-camel-case
+/* 
+ * Should be MyAldaList according to Google Java Style guide. https://google.github.io/styleguide/javaguide.html#s5.3-camel-case
+ * It is also named MyAldaList in the instructions on iLearn but not in the actual code references.
+ * https://ilearn2.dsv.su.se/mod/page/view.php?id=46589 "Namnet på er listklass ska vara MyAldaList ..."
+*/
 /** @author fredrik */
 public class MyALDAList<T> implements ALDAList<T> {
 	private Node<T> head;
@@ -19,9 +23,6 @@ public class MyALDAList<T> implements ALDAList<T> {
 		head = new Node<>(tail, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Iterable#iterator()
-	 */
 	@Override
 	public Iterator<T> iterator() {
 		return new MyALDAListIterator();
@@ -171,6 +172,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 		}
 	}
 
+	// Not ListIterator since this is a unidirectional list.
 	private class MyALDAListIterator implements Iterator<T> {
 		Node<T> prev = null;
 		Node<T> current = head;
@@ -185,6 +187,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 		public T next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
+			
 			prev = current;
 			current = current.next;
 			removeActive = true;
