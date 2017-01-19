@@ -101,7 +101,8 @@ public class MyALDAList<T> implements ALDAList<T> {
 		beforeRefNode.next = after;
 		size--;
 	}
-
+	
+	@Deprecated 
 	private Node<T> findNodeBeforeElement(T element) {
 		Node<T> current = head;
 		for (int i = -1; i < size - 1; i++) {
