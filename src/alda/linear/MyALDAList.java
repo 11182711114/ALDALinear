@@ -2,6 +2,7 @@ package alda.linear;
 //Fredrik Larsson frla9839 flarsson93@gmail.com
 
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 import alda.linear.MyALDAList;
@@ -11,7 +12,8 @@ import alda.linear.MyALDAList;
  * It is also named MyAldaList in the instructions on iLearn but not in the actual code references.
  * https://ilearn2.dsv.su.se/mod/page/view.php?id=46589 "Namnet på er listklass ska vara MyAldaList ..."
 */
-/** @author fredrik */
+/** Unidirectonal implementation of ALDAList<T>
+ * @author fredrik */
 public class MyALDAList<T> implements ALDAList<T> {
 	private Node<T> head;
 	private Node<T> tail;
@@ -22,7 +24,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 		tail = new Node<>(null, null);
 		head = new Node<>(tail, null);
 	}
-
+	
 	@Override
 	public Iterator<T> iterator() {
 		return new MyALDAListIterator();
@@ -76,10 +78,19 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 	@Override
 	public boolean remove(T element) {
-		Node<T> nodeBefore = findNodeBeforeElement(element);
-		if (nodeBefore != null) {
-			removeNextNode(nodeBefore);
-			return true;
+//		v1, no iterator
+//		Node<T> nodeBefore = findNodeBeforeElement(element);
+//		if (nodeBefore != null) {
+//			removeNextNode(nodeBefore);
+//			return true;
+//		}
+//		v2, using iterator
+		for (Iterator<T> iter = iterator(); iter.hasNext();){
+			T item = iter.next();
+			if (item == element){
+				iter.remove();
+				return true;
+			}
 		}
 		
 		return false;
@@ -172,11 +183,11 @@ public class MyALDAList<T> implements ALDAList<T> {
 		}
 	}
 
-	// Not ListIterator since this is a unidirectional list.
-	private class MyALDAListIterator implements Iterator<T> {
+	private class MyALDAListIterator implements ListIterator<T> {
 		Node<T> prev = null;
 		Node<T> current = head;
 		boolean removeActive = false;
+		int index = -1;
 
 		@Override
 		public boolean hasNext() {
@@ -191,7 +202,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 			prev = current;
 			current = current.next;
 			removeActive = true;
-
+			index++;
 			return current.ref;
 		}
 
@@ -201,7 +212,44 @@ public class MyALDAList<T> implements ALDAList<T> {
 				throw new IllegalStateException();
 
 			MyALDAList.this.removeNextNode(prev);
+			index--;
 			removeActive = false;
+		}
+
+		@Override
+		public void add(T element) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean hasPrevious() {
+			return prev != null && prev != head;
+		}
+
+		@Override
+		public int nextIndex() {
+			return index + 1;
+		}
+
+		@Override
+		public T previous() {
+			if(!hasPrevious())
+				throw new NoSuchElementException();
+			current = prev;
+			prev = null;
+			return current.ref;
+		}
+
+		@Override
+		public int previousIndex() {
+			return index - 1;
+		}
+
+		@Override
+		public void set(T element) {
+			if(!removeActive)
+				throw new NoSuchElementException();
+			current.ref = element;
 		}
 	}
 }
