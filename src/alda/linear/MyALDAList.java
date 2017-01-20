@@ -12,7 +12,7 @@ import alda.linear.MyALDAList;
  * It is also named MyAldaList in the instructions on iLearn but not in the actual code references.
  * https://ilearn2.dsv.su.se/mod/page/view.php?id=46589 "Namnet på er listklass ska vara MyAldaList ..."
  * 
- * Several methods include two versions, one without using (List)Iterator and one with.
+ * Several methods include two versions, one using (List)Iterator and one without.
 */
 /** Unidirectonal implementation of ALDAList<T>
  * @author fredrik */
