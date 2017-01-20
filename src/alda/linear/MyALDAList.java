@@ -50,14 +50,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 		if(index == size){
 			add(element);
 		} 
-		else {	
-//			for (ListIterator<T> iter = (ListIterator<T>) iterator(); iter.hasNext(); ){
-//				if (index == iter.nextIndex()) {
-//					iter.add(element);
-//					return;
-//				}
-//				iter.next();
-//			}
+		else {
 			
 			Node<T> current = head;
 			for (int i = -1; i < index; i++) {
@@ -71,6 +64,14 @@ public class MyALDAList<T> implements ALDAList<T> {
 			}
 			
 			size++;
+			
+//			for (ListIterator<T> iter = (ListIterator<T>) iterator(); iter.hasNext(); ){
+//				if (index == iter.nextIndex()) {
+//					iter.add(element);
+//					return;
+//				}
+//				iter.next();
+//			}
 		}
 	}
 
