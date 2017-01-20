@@ -44,18 +44,30 @@ public class MyALDAList<T> implements ALDAList<T> {
 		if (index < 0 || index > size)
 			throw new IndexOutOfBoundsException();
 
-		Node<T> current = head;
-		for (int i = -1; i < index; i++) {
-			if (i == index - 1) {
-				Node<T> before = current;
-				Node<T> after = current.next;
-				before.next = new Node<T>(after, element);
-				break;
+//		Node<T> current = head;
+//		for (int i = -1; i < index; i++) {
+//			if (i == index - 1) {
+//				Node<T> before = current;
+//				Node<T> after = current.next;
+//				before.next = new Node<T>(after, element);
+//				break;
+//			}
+//			current = current.next;
+//		}
+//		
+//		size++;
+		if(index == size){
+			add(element);
+		} 
+		else {	
+			for (ListIterator<T> iter = (ListIterator<T>) iterator(); iter.hasNext(); ){
+				if (index == iter.nextIndex()) {
+					iter.add(element);
+					return;
+				}
+				iter.next();
 			}
-			current = current.next;
 		}
-		
-		size++;
 	}
 
 	@Override
@@ -63,14 +75,22 @@ public class MyALDAList<T> implements ALDAList<T> {
 		if (index < 0 || index > size - 1)
 			throw new IndexOutOfBoundsException();
 
-		Node<T> current = head;
-		for (int i = -1; i < index; i++) {
-			if (i == index - 1) {
-				T toReturn = current.next.ref;
-				removeNextNode(current);
-				return toReturn;
+//		Node<T> current = head;
+//		for (int i = -1; i < index; i++) {
+//			if (i == index - 1) {
+//				T toReturn = current.next.ref;
+//				removeNextNode(current);
+//				return toReturn;
+//			}
+//			current = current.next;
+//		}
+		for (ListIterator<T> iter = (ListIterator<T>) iterator(); iter.hasNext(); ){
+			int i = iter.nextIndex();
+			T item = iter.next();
+			if (i == index){
+				iter.remove();
+				return item;
 			}
-			current = current.next;
 		}
 		
 		return null;
@@ -119,14 +139,20 @@ public class MyALDAList<T> implements ALDAList<T> {
 		if (index < 0 || index > size - 1)
 			throw new IndexOutOfBoundsException();
 
-		Node<T> current = head;
-		for (int i = -1; i <= index; i++) {
-			if (i == index) {
-				break;
-			}
-			current = current.next;
+//		Node<T> current = head;
+//		for (int i = -1; i <= index; i++) {
+//			if (i == index) {
+//				break;
+//			}
+//			current = current.next;
+//		}
+//		return current.ref;
+		for (ListIterator<T> iter = (ListIterator<T>) iterator(); iter.hasNext(); ){
+			if (iter.nextIndex() == index)
+				return iter.next();
+			iter.next();
 		}
-		return current.ref;
+		return null;
 	}
 
 	@Override
@@ -137,12 +163,17 @@ public class MyALDAList<T> implements ALDAList<T> {
 	@Override
 	public int indexOf(T element) {
 		
-		Node<T> current = head;
-		for (int i = -1; i <= size; i++) {
-			if (current.ref == element) {
-				return i;
-			}
-			current = current.next;
+//		Node<T> current = head;
+//		for (int i = -1; i <= size; i++) {
+//			if (current.ref == element) {
+//				return i;
+//			}
+//			current = current.next;
+//		}
+		for (ListIterator<T> iter = (ListIterator<T>) iterator(); iter.hasNext(); ){
+			int index = iter.nextIndex();
+			if (element == iter.next())
+				return index;
 		}
 		
 		return -1;
@@ -162,13 +193,13 @@ public class MyALDAList<T> implements ALDAList<T> {
 	@Override
 	public String toString() {
 		String output = "[";
-
-		for (Iterator<T> iter = iterator(); iter.hasNext();) {
-			T item = iter.next();
-			if (iter.hasNext())
-				output += item + ", ";
-			else
-				output += item;
+		
+		Iterator<T> iter = iterator();
+		if (iter.hasNext())
+			output += iter.next();
+		while (iter.hasNext()){
+			output += ", ";
+			output += iter.next().toString();
 		}
 
 		return output + "]";
@@ -219,9 +250,12 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 		@Override
 		public void add(T element) {
-			throw new UnsupportedOperationException();
+			Node<T> after = current.next;
+			current.next = new Node<T>(after,element);
+			MyALDAList.this.size++;
+			index++;
 		}
-
+		
 		@Override
 		public boolean hasPrevious() {
 			return prev != null && prev != head;
