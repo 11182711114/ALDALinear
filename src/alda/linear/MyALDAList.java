@@ -1,5 +1,5 @@
-package alda.linear;
 //Fredrik Larsson frla9839 flarsson93@gmail.com
+package alda.linear;
 
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -14,7 +14,7 @@ import alda.linear.MyALDAList;
  * 
  * Several methods include two versions, one using (List)Iterator and one without.
 */
-/** Unidirectonal implementation of ALDAList<T>
+/** Unidirectonal implementation of ALDAList
  * @author fredrik */
 public class MyALDAList<T> implements ALDAList<T> {
 	private Node<T> head;
